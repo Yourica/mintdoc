@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { mergeRuns, escapeXml } from "../utils/xml";
+import { mergeRuns, escapeXml, promoteTableLoopTags } from "../utils/xml";
 
 describe("escapeXml", () => {
   it("escapes &, <, >, \", '", () => {
@@ -49,5 +49,44 @@ describe("mergeRuns", () => {
     const result = mergeRuns(xml);
     expect(result).toContain("{ok}");
     expect(result).toContain("{split}");
+  });
+});
+
+describe("promoteTableLoopTags", () => {
+  it("moves loop tags outside the table row", () => {
+    const xml =
+      '<w:tr><w:tc><w:p><w:r><w:t>{#items}{name}</w:t></w:r></w:p></w:tc>' +
+      '<w:tc><w:p><w:r><w:t>{price}{/items}</w:t></w:r></w:p></w:tc></w:tr>';
+    const result = promoteTableLoopTags(xml);
+    expect(result).toMatch(/^\{#items\}<w:tr>/);
+    expect(result).toMatch(/<\/w:tr>\{\/items\}$/);
+    // Loop tags removed from inside the row
+    const insideRow = result.replace(/^\{#items\}/, "").replace(/\{\/items\}$/, "");
+    expect(insideRow).not.toContain("{#items}");
+    expect(insideRow).not.toContain("{/items}");
+    // But {name} and {price} should remain inside
+    expect(result).toContain("{name}");
+    expect(result).toContain("{price}");
+  });
+
+  it("does not touch rows without loop tags", () => {
+    const xml =
+      '<w:tr><w:tc><w:p><w:r><w:t>{name}</w:t></w:r></w:p></w:tc></w:tr>';
+    expect(promoteTableLoopTags(xml)).toBe(xml);
+  });
+
+  it("does not promote condition tags", () => {
+    const xml =
+      '<w:tr><w:tc><w:p><w:r><w:t>{#if active}yes{/if}</w:t></w:r></w:p></w:tc></w:tr>';
+    expect(promoteTableLoopTags(xml)).toBe(xml);
+  });
+
+  it("preserves header rows", () => {
+    const xml =
+      '<w:tr><w:tc><w:p><w:r><w:t>Header</w:t></w:r></w:p></w:tc></w:tr>' +
+      '<w:tr><w:tc><w:p><w:r><w:t>{#items}{name}{/items}</w:t></w:r></w:p></w:tc></w:tr>';
+    const result = promoteTableLoopTags(xml);
+    expect(result).toContain("<w:tr><w:tc><w:p><w:r><w:t>Header</w:t>");
+    expect(result).toMatch(/\{#items\}<w:tr>/);
   });
 });

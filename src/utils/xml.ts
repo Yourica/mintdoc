@@ -106,6 +106,49 @@ export function mergeRuns(xml: string): string {
   return result;
 }
 
+/**
+ * Promote loop tags that are inside table cells to wrap the entire table row.
+ *
+ * When a user writes a loop inside a table (e.g. {#items} in the first cell
+ * and {/items} in the last cell), the tags need to wrap the whole <w:tr>
+ * element so that entire rows are duplicated — not just cell contents.
+ *
+ * Before: <w:tr><w:tc>..{#items}{name}..</w:tc><w:tc>..{price}{/items}..</w:tc></w:tr>
+ * After:  {#items}<w:tr><w:tc>..{name}..</w:tc><w:tc>..{price}..</w:tc></w:tr>{/items}
+ */
+export function promoteTableLoopTags(xml: string): string {
+  // Match each table row (non-greedy — works for non-nested tables)
+  const trRegex = /<w:tr\b[^>]*>[\s\S]*?<\/w:tr>/g;
+
+  return xml.replace(trRegex, (rowXml) => {
+    // Find loop open tags (exclude conditions: {#if ...})
+    const openRegex = /\{#(?!if[\s}])([\w.]+)\}/g;
+    const closeRegex = /\{\/(?!if\})([\w.]+)\}/g;
+
+    const opens: string[] = [];
+    const closes: string[] = [];
+
+    let match;
+    while ((match = openRegex.exec(rowXml)) !== null) opens.push(match[1]);
+    while ((match = closeRegex.exec(rowXml)) !== null) closes.push(match[1]);
+
+    // Only promote when a single loop wraps the row
+    if (
+      opens.length === 1 &&
+      closes.length === 1 &&
+      opens[0] === closes[0]
+    ) {
+      const name = opens[0];
+      const cleaned = rowXml
+        .replace(`{#${name}}`, "")
+        .replace(`{/${name}}`, "");
+      return `{#${name}}${cleaned}{/${name}}`;
+    }
+
+    return rowXml;
+  });
+}
+
 function countChar(str: string, char: string): number {
   let count = 0;
   for (let i = 0; i < str.length; i++) {

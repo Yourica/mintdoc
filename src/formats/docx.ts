@@ -2,7 +2,7 @@ import type { FormatterMap } from "../core/types";
 import { tokenize } from "../core/lexer";
 import { parse } from "../core/parser";
 import { render } from "../core/renderer";
-import { mergeRuns } from "../utils/xml";
+import { mergeRuns, promoteTableLoopTags } from "../utils/xml";
 import { openZip, getFile, setFile, generateZip } from "../utils/zip";
 
 /**
@@ -51,7 +51,8 @@ function processXml(
   formatters: FormatterMap,
 ): string {
   const merged = mergeRuns(xml);
-  const tokens = tokenize(merged);
+  const promoted = promoteTableLoopTags(merged);
+  const tokens = tokenize(promoted);
   const ast = parse(tokens);
   return render(ast, data, formatters);
 }
