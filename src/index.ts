@@ -1,8 +1,4 @@
-import type {
-  FormatterMap,
-  MintdocPlugin,
-  RenderOptions,
-} from "./core/types";
+import type { FormatterMap, MintdocPlugin, RenderOptions } from "./core/types";
 import { processDocx } from "./formats/docx";
 import { collectFormatters } from "./plugins/plugin-api";
 
@@ -50,10 +46,7 @@ export class Mintdoc {
     template: Buffer | ArrayBuffer | Uint8Array,
     data: Record<string, unknown>,
   ): Buffer {
-    const formatters = collectFormatters(
-      this.plugins,
-      this.extraFormatters,
-    );
+    const formatters = collectFormatters(this.plugins, this.extraFormatters);
     return processDocx(template, data, formatters);
   }
 }
