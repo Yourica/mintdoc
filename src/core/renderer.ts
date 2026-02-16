@@ -58,7 +58,7 @@ function renderVariable(
     const fn = formatters[fmtName];
     if (!fn) {
       throw new MintdocRenderError(
-        `Unknown formatter "${fmtName}". Available formatters: ${Object.keys(formatters).join(", ") || "(none)"}`,
+        `Unknown formatter "${fmtName}". Check your template and available formatters.`,
       );
     }
     value = fn(value);

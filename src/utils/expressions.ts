@@ -2,9 +2,9 @@
  * Resolve a dot-notation path against a data object.
  *
  * Examples:
- *   resolveValue("name", { name: "Alice" })           → "Alice"
+ *   resolveValue("name", { name: "Alice" }) → "Alice"
  *   resolveValue("company.name", { company: { name: "Acme" } }) → "Acme"
- *   resolveValue(".", currentItem)                     → currentItem
+ *   resolveValue(".", currentItem) → currentItem
  */
 export function resolveValue(path: string, data: unknown): unknown {
   if (data == null || typeof data !== "object") {
