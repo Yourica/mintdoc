@@ -1,6 +1,6 @@
 {
   "name": "mintdoc",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Mint perfect documents from templates. A modern document templating engine for .docx files.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
