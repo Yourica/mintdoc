@@ -31,8 +31,13 @@
     "office",
     "openxml"
   ],
-  "author": "",
+  "author": "Yourica",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Yourica/mintdoc.git"
+  },
+  "homepage": "https://github.com/Yourica/mintdoc#readme",
   "dependencies": {
     "fast-xml-parser": "^5.2.0",
     "pizzip": "^3.2.0"
