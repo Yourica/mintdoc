@@ -1,11 +1,20 @@
-# Mintdoc
+<p align="center">
+  <img src="logo_mintdoc.svg" width="120" alt="Mintdoc" />
+</p>
 
-**Mint perfect documents from templates.**
+<h1 align="center">Mintdoc</h1>
 
-A modern, lightweight document templating engine for `.docx` files. Generate Word documents from templates and data — in Node.js or the browser.
+<p align="center"><strong>Mint perfect documents from templates.</strong></p>
 
-[![npm version](https://img.shields.io/npm/v/mintdoc)](https://www.npmjs.com/package/mintdoc)
-[![license](https://img.shields.io/npm/l/mintdoc)](./LICENSE)
+<p align="center">
+A modern, lightweight document templating engine for <code>.docx</code> files.<br/>
+Generate Word documents from templates and data — in Node.js or the browser.
+</p>
+
+<p align="center">
+  <a href="https://www.npmjs.com/package/mintdoc"><img src="https://img.shields.io/npm/v/mintdoc" alt="npm version"/></a>
+  <a href="./LICENSE"><img src="https://img.shields.io/npm/l/mintdoc" alt="license"/></a>
+</p>
 
 ---
 
