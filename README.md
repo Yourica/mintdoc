@@ -95,6 +95,8 @@ Inside a loop, these special variables are available:
 | `{@last}` | `true` on the last iteration |
 | `{.}` | Current item (for primitive arrays) |
 
+<br>
+
 ```
 {#items}
   {name} — item {#if @first}(first){/if}{#if @last}(last){/if}
